@@ -1,11 +1,5 @@
-// Uses POSIX serial port functions to send and receive data from a Jrk G2.
-// NOTE: The Jrk's input mode must be "Serial / I2C / USB".
-// NOTE: The Jrk's serial mode must be set to "USB dual port" if you are
-//   connecting to it directly via USB.
-// NODE: The Jrk's serial mode must be set to "UART" if you are connecting to
-//   it via is TX and RX lines.
-// NOTE: You might need to change the 'const char * device' line below to
-//   specify the correct serial port.
+// from here
+// https://www.pololu.com/docs/0J73/15.5
  
 #include <fcntl.h>
 #include <stdio.h>
@@ -19,8 +13,7 @@
 int open_serial_port(const char * device, uint32_t baud_rate)
 {
   printf("opening \n");
-      //fd = open("/dev/tty.usbmodem1411", O_RDWR | O_NOCTTY | O_NDELAY);
-  int fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY);
+  int fd = open(device, O_RDWR | O_NOCTTY | O_NDELAY); // oso added O_NDELAY it was hanging without it
   if (fd == -1)
   {
     perror(device);
@@ -128,16 +121,10 @@ uint8_t buf[4096];
 
 int main()
 {
-  // Choose the serial port name.  If the Jrk is connected directly via USB,
-  // you can run "jrk2cmd --cmd-port" to get the right name to use here.
   // Linux USB example:          "/dev/ttyACM0"  (see also: /dev/serial/by-id)
   // macOS USB example:          "/dev/cu.usbmodem001234562"
-  // Cygwin example:             "/dev/ttyS7"
-  const char * device = "/dev/ttyACM0";
+  const char * device = "/dev/tty.usbmodem1411";
  
-  // Choose the baud rate (bits per second).  This does not matter if you are
-  // connecting to the Jrk over USB.  If you are connecting via the TX and RX
-  // lines, this should match the baud rate in the Jrk's serial settings.
   uint32_t baud_rate = 115200;
  
   printf("opening \n");

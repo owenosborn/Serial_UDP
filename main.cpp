@@ -7,7 +7,6 @@ Serial serial;
 SLIPEncodedSerial slipdec;
 UdpSocket udpSock(5000);
 
-
 uint8_t buf[4096];
 
 int main() {
@@ -23,3 +22,4 @@ int main() {
     }
     //printf("error %d reading: %s", errno, strerror (errno));
 }
+

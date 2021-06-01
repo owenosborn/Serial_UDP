@@ -68,7 +68,8 @@ Serial::Serial()
 {
     // Open serial port   
     printf ("opening serial .....\n");
-    serial_fd = open("/dev/serial/by-id/usb-SparkFun_SFE_SAMD21_7600763950575035352E3120FF011F43-if00", O_RDWR | O_NOCTTY | O_NDELAY);
+    //serial_fd = open("/dev/serial/by-id/usb-SparkFun_SFE_SAMD21_7600763950575035352E3120FF011F43-if00", O_RDWR | O_NOCTTY | O_NDELAY);
+    serial_fd = open("/dev/tty.usbmodem1411", O_RDWR | O_NOCTTY | O_NDELAY);
     //serial_fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY);
     if (serial_fd < 0)
     {

@@ -6,11 +6,11 @@ compile:
 
 g++ -o main main.cpp Serial.cpp SLIPEncodedSerial.cpp UdpSocket.cpp Socket.cpp
 
-kill any process using the serial port:
+to kill any process using the serial port:
 
-sudo fuser -k /dev/serial/by-id/usb-SparkFun_SFE_SAMD21_7600763950575035352E3120FF011F43-if00
+sudo fuser -k /dev/name of port
 
-also appears ModemManager is grabbing the port when USB first attached, so disable this:
+also in Linux ModemManager is grabbing the port when USB first attached, so disable this:
 
 sudo systemctl disable ModemManager.service
 sudo systemctl stop ModemManager.service
