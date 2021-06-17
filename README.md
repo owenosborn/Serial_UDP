@@ -2,7 +2,7 @@
 
 a bridge between UDP and serial port (SLIP encoded): 
 
-* serial in -> SLIP deocode -> UDP out
+* serial in -> SLIP decode -> UDP out
 * UDP in -> SLIP encode -> serial out
 
 compile:
