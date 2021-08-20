@@ -123,7 +123,7 @@ int main()
 {
   // Linux USB example:          "/dev/ttyACM0"  (see also: /dev/serial/by-id)
   // macOS USB example:          "/dev/cu.usbmodem001234562"
-  const char * device = "/dev/tty.usbmodem1411";
+  const char * device = "/dev/cu.usbmodem14201";
  
   uint32_t baud_rate = 115200;
  

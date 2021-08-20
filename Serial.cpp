@@ -1,6 +1,7 @@
 
 #include "Serial.h"
-
+#include <fstream>
+#include <iostream>
 #include <errno.h>
 #include <termios.h>
 #include <unistd.h>
@@ -66,26 +67,40 @@ static int set_interface_attribs (int fd, int speed)
 
 Serial::Serial()
 {
-    // Open serial port   
-    printf ("opening serial .....\n");
-    //serial_fd = open("/dev/serial/by-id/usb-SparkFun_SFE_SAMD21_7600763950575035352E3120FF011F43-if00", O_RDWR | O_NOCTTY | O_NDELAY);
-    serial_fd = open("/dev/tty.usbmodem1411", O_RDWR | O_NOCTTY | O_NDELAY);
-    //serial_fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY);
-    if (serial_fd < 0)
-    {
-        printf("error %d opening %s: %s", errno, "/dev/whatever", strerror (errno));
-        return;
-    }
-        /* set no wait on any operation */
-    fcntl(serial_fd, F_SETFL, FNDELAY);
+    //Acquire SAMD21 Device USB ID
+    char* pUSB_DEV = getenv("USB_DEV");
     
-    printf("opened serial, setting up... \n");    
-    //set_interface_attribs (serial_fd, B500000);  // set speed to 115,200 bps, 8n1 (no parity)
-    set_interface_attribs (serial_fd, B115200);  // set speed to 115,200 bps, 8n1 (no parity)
-    // Flush the port's buffers (in and out) before we start using it
-    tcflush(serial_fd, TCIOFLUSH);
-    printf("done opening serial \n");    
+    //Initial Error Check
+    if(pUSB_DEV !=nullptr)
+    {
+        printf("SAMD21 USB ID (%s) found \n", pUSB_DEV);
 
+        // Open serial port   
+        printf ("opening serial .....\n");
+        //serial_fd = open("/dev/serial/by-id/usb-SparkFun_SFE_SAMD21_7600763950575035352E3120FF011F43-if00", O_RDWR | O_NOCTTY | O_NDELAY);
+        serial_fd = open(pUSB_DEV, O_RDWR | O_NOCTTY | O_NDELAY);
+        //serial_fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NDELAY);
+        if (serial_fd < 0)
+        {
+            printf("error %d opening %s: %s", errno, "/dev/whatever", strerror (errno));
+            return;
+        }
+            /* set no wait on any operation */
+        fcntl(serial_fd, F_SETFL, FNDELAY);
+
+        printf("opened serial, setting up... \n");    
+        //set_interface_attribs (serial_fd, B500000);  // set speed to 115,200 bps, 8n1 (no parity)
+        set_interface_attribs (serial_fd, B115200);  // set speed to 115,200 bps, 8n1 (no parity)
+        // Flush the port's buffers (in and out) before we start using it
+        tcflush(serial_fd, TCIOFLUSH);
+        printf("done opening serial \n");
+    }
+    
+    //Error Handling
+    else {   
+        printf("SAMD21 USB ID not found! \n");
+        throw std::invalid_argument("Null pointer passed as environment variable name");
+    }
 }
 
   // destructor
