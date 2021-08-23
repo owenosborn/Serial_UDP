@@ -4,7 +4,8 @@ echo -e "\n~~ Acquiring SAMD21 USB Device Name ~~ \n"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]] ## Prefix for Linux kernels
 then
-     #export USB_DEV=$(ioreg -rbc IOUSBHostDevice -l -n "SFE SAMD21" | grep -o /dev/tty.usbmodem*) 
+     #export USB_DEV=$(ioreg -rbc IOUSBHostDevice -l -n "SFE SAMD21" | grep -o /dev/tty.usbmodem*)
+     echo -e "## Linux OS detected: $(uname -v)\n"
      for sysdevpath in $(find /sys/bus/usb/devices/usb*/ -name dev); do
     (
         syspath="${sysdevpath%/dev}"
@@ -24,22 +25,33 @@ then
     source temp.txt
     export USB_DEV
     rm temp.txt
-     
-     
-     echo -e "The IO Dial-In ID for the SAMD21 Device is:" $USB_DEV
     
 elif [[ "$OSTYPE" == "darwin"* ]] ## Prefix for Mac OSX kernels
 then
+    echo -e "## MAC OS detected: $(uname -v)\n"
     export USB_DEV=$(ioreg -rbc IOUSBHostDevice -l -n "SFE SAMD21" | grep -o /dev/cu.usbmodem*)
-    echo -e "The IO Call-Out ID for the SAMD21 Device is:" $USB_DEV
-
 else
-    echo -e "Native OS not found!\n"
+    echo -e "## Native OS not found!\n"
 fi 
 
+if [[ ! -z $USB_DEV ]]
+then
+    case $OSTYPE in
+        
+        "linux-gnu"*)
+        echo -e "## The IO Dial-In ID for the SAMD21 Device is:" $USB_DEV
+        ;;
+        
+        "darwin"*)
+        echo -e "## The IO Call-Out ID for the SAMD21 Device is:" $USB_DEV
+        ;;
+    esac 
 
+    echo -e "\n"
+    echo -e "~~ Initializing Serial Ports ~~\n" 
+    ./main
 
-echo -e "\n"
-echo -e "~~ Initializing Serial Ports ~~\n"
-./main
+else
+    echo -e "USB Device name not found!\n"
+fi
 
