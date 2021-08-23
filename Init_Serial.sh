@@ -52,6 +52,6 @@ then
     ./main
 
 else
-    echo -e "USB Device name not found!\n"
+    echo -e "## Error: USB Device name not found\n"
 fi
 
